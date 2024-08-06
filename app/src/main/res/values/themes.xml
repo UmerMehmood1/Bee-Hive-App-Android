@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BeeHiveClient" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/primaryColor</item>
+    </style>
+
+    <style name="Theme.BeeHiveClient" parent="Base.Theme.BeeHiveClient" />
+    <style name="CustomBottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_item_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_item_colors</item>
+    </style>
+    <style name="Heading1TextStyle">
+        <item name="android:textColor">@color/textColorH1</item>
+        <item name="android:fontFamily">@font/lexend_bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="Heading2TextStyle">
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textColor">@color/primaryDarkColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="CustomSwitch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <!-- Use the custom drawable for the track -->
+        <item name="track">@drawable/switch_track</item>
+        <!-- Use the custom drawable for the thumb -->
+        <item name="thumbColor">@drawable/switch_thumb</item>
+    </style>
+</resources>

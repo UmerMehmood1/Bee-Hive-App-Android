@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    tools:context=".fragments.DashboardFragment">
+
+    <TextView
+        android:id="@+id/dashboardText"
+        android:textColor="@color/textColorH1"
+        android:fontFamily="@font/lexend_bold"
+        android:textSize="22sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dashboard" />
+    <EditText
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dashboardText"
+        android:layout_margin="10dp"
+        android:background="@drawable/search_bar_background"
+        android:hint="Search hive"
+        android:padding="10dp"
+        android:drawableLeft="@drawable/round_search_24"
+        android:drawablePadding="10dp"
+        android:textColor="@color/textColorH1"
+        android:inputType="text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/searchView"
+        android:id="@+id/hiveRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/primaryColor"
+        android:src="@drawable/round_add_24"
+        />
+
+</RelativeLayout>
