@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_top_bottom_sheet_background"
+    >
+    <TextView
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:theme="@style/Heading1TextStyle"
+        android:text="Backup Options" />
+    <TextView
+        android:background="?selectableItemBackground"
+        android:id="@+id/hourly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:theme="@style/Heading2TextStyle"
+        android:text="Hourly" />
+    <TextView
+        android:background="?selectableItemBackground"
+        android:id="@+id/daily"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:theme="@style/Heading2TextStyle"
+        android:text="Daily" />
+    <TextView
+        android:background="?selectableItemBackground"
+        android:id="@+id/weekly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:theme="@style/Heading2TextStyle"
+        android:text="Weekly" />
+</LinearLayout>

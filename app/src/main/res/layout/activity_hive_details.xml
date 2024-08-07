@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activities.HiveDetailsActivity">
+    <RelativeLayout
+        android:elevation="10dp"
+        android:padding="6dp"
+        android:id="@+id/hiveTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/hiveTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:text="Hive #1"
+            android:theme="@style/Heading1TextStyle" />
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?actionBarItemBackground"
+            android:padding="8dp"
+            android:src="@drawable/round_arrow_back_24" />
+    </RelativeLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/temperatureAndHumidityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Temperature &amp; Humidity"
+                android:theme="@style/Heading1TextStyle" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/day"
+                    android:layout_marginEnd="4dp"
+                    android:padding="8dp"
+                    android:textColor="@color/tabItemTextColor"
+                    android:textStyle="bold"
+                    android:background="@drawable/tab_item_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Day"/>
+                <TextView
+                    android:id="@+id/week"
+                    android:layout_marginHorizontal="4dp"
+                    android:padding="8dp"
+                    android:textColor="@color/tabItemTextColor"
+                    android:textStyle="bold"
+                    android:background="@drawable/tab_item_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Week"/>
+                <TextView
+                    android:id="@+id/month"
+                    android:layout_marginHorizontal="4dp"
+                    android:padding="8dp"
+                    android:textColor="@color/tabItemTextColor"
+                    android:textStyle="bold"
+                    android:background="@drawable/tab_item_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Month"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/temperatureTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Temperature"
+                android:textSize="18sp"
+                android:theme="@style/Heading1TextStyle" />
+            <LinearLayout
+                android:id="@+id/noDataLayoutTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:src="@drawable/desktop_workstation"/>
+                <TextView
+                    android:textAlignment="gravity"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No Data Available"
+                    android:theme="@style/Heading2TextStyle"/>
+            </LinearLayout>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/temperatureChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="16dp"
+                />
+
+            <TextView
+                android:id="@+id/humidityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Humidity"
+                android:textSize="18sp"
+                android:theme="@style/Heading1TextStyle" />
+            <LinearLayout
+                android:id="@+id/noDataLayoutHumidity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:src="@drawable/desktop_workstation"/>
+                <TextView
+                    android:textAlignment="gravity"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No Data Available"
+                    android:theme="@style/Heading2TextStyle"/>
+            </LinearLayout>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/humidityChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="16dp"
+                />
+
+            <TextView
+                android:id="@+id/soundLevelsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Sound Levels"
+                android:theme="@style/Heading1TextStyle" />
+
+            <LinearLayout
+                android:id="@+id/averageSoundLevel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/alertItemIconBackground"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:src="@drawable/mic" />
+                </androidx.cardview.widget.CardView>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:id="@+id/microphoneText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Average Sound Level"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@id/microphoneText"
+                        android:gravity="right"
+                        android:text="35dB"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/weightTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Weight"
+                android:theme="@style/Heading1TextStyle" />
+
+            <LinearLayout
+                android:id="@+id/currentWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/alertItemIconBackground"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:src="@drawable/weight" />
+                </androidx.cardview.widget.CardView>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:id="@+id/weightText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Average Weight Level"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@id/weightText"
+                        android:gravity="right"
+                        android:text="80 lbs"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/powerTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Power"
+                android:theme="@style/Heading1TextStyle" />
+
+            <LinearLayout
+                android:id="@+id/currentPower"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/alertItemIconBackground"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:src="@drawable/battery" />
+                </androidx.cardview.widget.CardView>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:id="@+id/batteryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Average Sound Level"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@id/batteryText"
+                        android:gravity="right"
+                        android:text="100%"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/textColorH1"
+                        android:textSize="18sp"
+                        android:theme="@style/Heading2TextStyle" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

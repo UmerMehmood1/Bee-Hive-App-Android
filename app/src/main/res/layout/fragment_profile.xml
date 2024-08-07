@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,6 +7,11 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:padding="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
     <!-- Profile Header -->
     <androidx.cardview.widget.CardView
@@ -27,14 +32,20 @@
             android:padding="16dp">
 
             <!-- Profile Picture (Optional) -->
-            <ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/profile_photo"
-                android:layout_marginEnd="16dp"/>
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="1000dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/profile_photo"
+                    />
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
+                android:layout_marginLeft="16dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/Heading2TextStyle"
                         android:textColor="@color/textColorH1"
-                        android:text="Temperature is too high"
+                        android:text="Lives in California"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -230,15 +241,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:layout_centerVertical="true"
                     android:theme="@style/Heading2TextStyle"
                     android:textColor="@color/textColorH2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Notifications" />
-                <ImageView
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/notificationSwitch"
+                    android:theme="@style/CustomSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/arrow_right"
+                    android:src="@drawable/file_svg"
                     android:layout_alignParentEnd="true"/>
             </RelativeLayout>
 
@@ -264,5 +278,6 @@
             </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-    
-</LinearLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

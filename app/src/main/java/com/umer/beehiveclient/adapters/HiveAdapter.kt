@@ -1,9 +1,11 @@
 package com.umer.beehiveclient.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.umer.beehiveclient.R
+import com.umer.beehiveclient.activities.HiveDetailsActivity
 import com.umer.beehiveclient.databinding.HiveItemBinding
 import com.umer.beehiveclient.models.HiveModel
 
@@ -18,6 +20,11 @@ class HiveAdapter(private var hiveList: List<HiveModel>) : RecyclerView.Adapter<
             binding.soundAmount.text = hive.sound
             // Assuming you have a drawable resource ID in HiveModel for the image
             binding.hiveImage.setImageResource(R.drawable.bees_1)
+            binding.root.setOnClickListener {
+                // Handle item click event here
+                binding.root.context.startActivity(Intent(binding.root.context, HiveDetailsActivity::class.java))
+            }
+
         }
     }
 

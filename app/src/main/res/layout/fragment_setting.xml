@@ -48,6 +48,7 @@
 
                 <!-- Temperature -->
                 <LinearLayout
+                    android:id="@+id/temperatureThresholdsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -93,6 +94,7 @@
 
                 <!-- Temperature -->
                 <LinearLayout
+                    android:id="@+id/humidityThresholdsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -102,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Temperature"
+                        android:text="Humdity"
                         android:textSize="16sp"
                         android:theme="@style/Heading1TextStyle" />
                     <TextView
@@ -230,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:text="Backup" />
                 <com.google.android.material.materialswitch.MaterialSwitch
-
+                    android:id="@+id/backupSwitch"
                     android:theme="@style/CustomSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -258,6 +260,7 @@
                     android:theme="@style/Heading2TextStyle" />
 
                 <TextView
+                    android:id="@+id/backupFrequencyText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

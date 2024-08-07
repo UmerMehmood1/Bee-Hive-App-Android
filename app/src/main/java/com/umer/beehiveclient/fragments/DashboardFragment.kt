@@ -18,9 +18,9 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var adapter: HiveAdapter
     private var hiveList = listOf(
-        HiveModel("Hive 1", 100, "25°C", "50%", "25dB"),
-        HiveModel("Hive 2", 150, "30°C", "60%", "30dB"),
-        HiveModel("Hive 3", 200, "35°C", "70%", "35dB")
+        HiveModel("Hive #1", 100, "25°C", "50%", "25dB"),
+        HiveModel("Hive #2", 150, "30°C", "60%", "30dB"),
+        HiveModel("Hive #3", 200, "35°C", "70%", "35dB")
     )
     private var filteredHiveList = hiveList.toMutableList()
 

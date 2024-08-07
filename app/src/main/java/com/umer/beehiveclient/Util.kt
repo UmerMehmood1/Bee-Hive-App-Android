@@ -44,4 +44,14 @@ object Util {
         toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
         toast?.show()
     }
+    fun saveBackupFrequency(context: Context, frequency: Int){
+        context.getSharedPreferences("backup",Context.MODE_PRIVATE).edit().apply {
+            putInt("frequency",frequency)
+            apply()
+        }
+    }
+    fun getBackupFrequency(context: Context): Int {
+        val sharedPreferences = context.getSharedPreferences("backup",Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("frequency",0)
+    }
 }

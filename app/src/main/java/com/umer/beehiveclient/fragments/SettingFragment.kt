@@ -1,60 +1,153 @@
 package com.umer.beehiveclient.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.google.android.gms.auth.GoogleAuthUtil
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.Scopes
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.model.File
 import com.umer.beehiveclient.R
+import com.umer.beehiveclient.Util
+import com.umer.beehiveclient.bottomSheets.BackupOptionsSheet
+import com.umer.beehiveclient.databinding.FragmentProfileBinding
+import com.umer.beehiveclient.databinding.FragmentSettingBinding
+import com.umer.beehiveclient.listeners.BackupOptionListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SettingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private lateinit var binding: FragmentSettingBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+    ): View {
+        binding = FragmentSettingBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        when {
+            Util.getBackupFrequency(requireContext()) == 0 -> {
+                binding.backupFrequencyText.text = "Hourly"
+            }
+
+            Util.getBackupFrequency(requireContext()) == 1 -> {
+                binding.backupFrequencyText.text = "Daily"
+            }
+
+            Util.getBackupFrequency(requireContext()) == 2 -> {
+                binding.backupFrequencyText.text = "Weekly"
+            }
+        }
+        uploadFile()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.frequencyButton.setOnClickListener {
+            BackupOptionsSheet(requireContext(), object : BackupOptionListener {
+                override fun onOptionSelected(option: Int) {
+                    val selectedItem = when (option) {
+                        BackupOptionsSheet.HOURLY -> "Hourly"
+                        BackupOptionsSheet.DAILY -> "Daily"
+                        BackupOptionsSheet.WEEKLY -> "Weekly"
+                        else -> "Unknown"
+                    }
+                    Util.saveBackupFrequency(requireContext(), option)
+                    binding.backupFrequencyText.text = selectedItem
+                }
+            })
+        }
+        binding.backupSwitch.setOnClickListener {
+
+            binding.backupSwitch.isChecked = binding.backupSwitch.isChecked
+        }
+    }
+
+    private fun uploadFile() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                context?.let {
+                    val account = GoogleSignIn.getLastSignedInAccount(it)
+                    account?.account?.let { accountNotNull ->
+                        val credential = GoogleAccountCredential.usingOAuth2(
+                            it, listOf(Scopes.DRIVE_FILE)
+                        ).apply {
+                            selectedAccount = accountNotNull
+                        }
+
+                        val driveService = Drive.Builder(
+                            AndroidHttp.newCompatibleTransport(),
+                            JacksonFactory.getDefaultInstance(),
+                            credential
+                        )
+                            .setApplicationName("Your Application Name")
+                            .build()
+
+                        // Create a file metadata object
+                        val fileMetadata = File()
+                        fileMetadata.name = "history.json"
+                        fileMetadata.mimeType = "application/json"
+
+                        // Create the JSON data
+                        val jsonData = """
+                        {
+                            "history": [
+                                {"event": "File uploaded", "timestamp": "${System.currentTimeMillis()}"}
+                            ]
+                        }
+                    """.trimIndent()
+
+                        val byteArrayOutputStream = ByteArrayOutputStream()
+                        byteArrayOutputStream.write(jsonData.toByteArray())
+
+                        val mediaContent = ByteArrayContent(
+                            "application/json",
+                            byteArrayOutputStream.toByteArray()
+                        )
+
+                        // Upload the file to Google Drive
+                        val file = driveService.files().create(fileMetadata, mediaContent)
+                            .setFields("id")
+                            .execute()
+
+                        withContext(Dispatchers.Main) {
+                            // Update the UI or notify user of success
+                            Toast.makeText(
+                                it,
+                                "File uploaded successfully: ${file.id}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    context?.let {
+                        // Handle errors
+                        Toast.makeText(
+                            it,
+                            "Upload failed: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
+        }
     }
+
 }

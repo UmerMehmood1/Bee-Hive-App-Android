@@ -33,12 +33,11 @@
             android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/lexend_bold"
             android:id="@+id/hiveName"
             android:text="Hive #1"
             android:layout_below="@id/imageCard"
-            android:textSize="22sp"
-            android:textColor="@color/textColorH1"/>
+            android:theme="@style/Heading1TextStyle"
+            />
         <TextView
             android:paddingTop="10dp"
             android:layout_width="wrap_content"

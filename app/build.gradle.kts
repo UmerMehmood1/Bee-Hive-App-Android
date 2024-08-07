@@ -38,9 +38,19 @@ android {
     viewBinding{
         enable = true
     }
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
+    implementation(libs.gson)
+    implementation(libs.google.http.client.android)
+    implementation (libs.play.services.auth.v2030)
+    implementation (libs.google.api.client.android)
+    implementation (libs.google.api.services.drive)
+    implementation(libs.glide)
+    implementation(libs.mpandroidchart)
     implementation(libs.circleimageview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
