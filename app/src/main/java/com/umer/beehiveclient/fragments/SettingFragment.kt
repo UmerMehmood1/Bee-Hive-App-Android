@@ -2,6 +2,7 @@ package com.umer.beehiveclient.fragments
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +54,6 @@ class SettingFragment : Fragment() {
                 binding.backupFrequencyText.text = "Weekly"
             }
         }
-        uploadFile()
         setListeners()
     }
 
@@ -73,7 +73,7 @@ class SettingFragment : Fragment() {
             })
         }
         binding.backupSwitch.setOnClickListener {
-
+            uploadFile()
             binding.backupSwitch.isChecked = binding.backupSwitch.isChecked
         }
     }
@@ -138,6 +138,7 @@ class SettingFragment : Fragment() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     context?.let {
+                        Log.d("UploadError", "Error uploading file", e)
                         // Handle errors
                         Toast.makeText(
                             it,
