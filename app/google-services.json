@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "399786079905",
-    "project_id": "encoded-keyword-426313-s5",
-    "storage_bucket": "encoded-keyword-426313-s5.appspot.com"
+    "project_number": "612169633560",
+    "project_id": "beehive-7a398",
+    "storage_bucket": "beehive-7a398.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:399786079905:android:2efb06b3baebf32fc7e2e0",
+        "mobilesdk_app_id": "1:612169633560:android:b129ff9e60f5872e01586d",
         "android_client_info": {
           "package_name": "com.umer.beehiveclient"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "399786079905-cu7e0v0mmdvor4ia9g9rgs7p22fs0upk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.umer.beehiveclient",
-            "certificate_hash": "6d3179d2de2a5255c19947a86706fd4234089114"
-          }
-        },
-        {
-          "client_id": "399786079905-nvp2q7e102i558vpr4fei8kkffnn6vat.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD3aDd0qgj9uFGNqEYVes-bGCCN_U_bGzU"
+          "current_key": "AIzaSyBxqGe0zBiaWWEzCa7miNVMHigtDcfO3Cg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "399786079905-nvp2q7e102i558vpr4fei8kkffnn6vat.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

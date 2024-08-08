@@ -269,6 +269,33 @@
                     android:theme="@style/Heading2TextStyle" />
 
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/backupNowButton"
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Backup Now"
+                    android:theme="@style/Heading2TextStyle"
+                    android:textColor="@color/textColorH1" />
+                <ProgressBar
+                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/backupNowButton"
+                    android:id="@+id/backupNowProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:indeterminateTint="@color/primaryColor"
+                    android:progress="10"
+                    android:progressTint="@color/primaryColor"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

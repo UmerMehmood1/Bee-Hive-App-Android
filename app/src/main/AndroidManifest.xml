@@ -3,9 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".BeeHiveApplication"
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,9 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BeeHiveClient"
         tools:targetApi="31">
-<!--        <meta-data-->
-<!--            android:name="com.google.android.gms.analytics.globalConfigResource"-->
-<!--            android:resource="@xml/global_tracker"/>-->
+        <activity
+            android:name=".activities.AddHiveActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.HiveDetailsActivity"
             android:exported="false" />
@@ -37,6 +42,15 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <receiver android:name=".recievers.NetworkChangeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".service.DataService"
+            android:foregroundServiceType="shortService"
+            android:exported="false" />
     </application>
 
 </manifest>

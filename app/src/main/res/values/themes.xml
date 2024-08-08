@@ -29,4 +29,13 @@
         <item name="thumbColor">@drawable/switch_thumb</item>
         <item name="colorOnPrimary">@color/white</item>
     </style>
+
+
+    <style name="BottomSheetTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@drawable/rounded_top_bottom_sheet_background</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+
+    </style>
+
 </resources>

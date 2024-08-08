@@ -64,14 +64,20 @@ class ProfileFragment : Fragment() {
         }
     }
     private fun setProfileData() {
-        context?.let {
-            val user = Util.getUser(context = it)
+        context?.let { context ->
+            val user = Util.getUser(context = context)
             binding.profileName.text = user?.name
             binding.profileInfo.text = user?.email
+
             if (user != null) {
                 if (user.photoUrl.isNotEmpty() && user.photoUrl != "null") {
                     Log.d("ProfileFragment", "onViewCreated: ${user.photoUrl}")
-                    Glide.with(this).load(user.photoUrl).into(binding.profileImage)
+                    Glide.with(this)
+                        .load(user.photoUrl)
+                        .error(R.drawable.profile_photo)
+                        .placeholder(R.drawable.profile_photo)
+                        .into(binding.profileImage)
+                        .onLoadFailed(ActivityCompat.getDrawable(context, R.drawable.profile_photo))
                 } else {
                     binding.profileImage.setImageResource(R.drawable.profile_photo)
                 }
@@ -79,6 +85,7 @@ class ProfileFragment : Fragment() {
                 binding.profileImage.setImageResource(R.drawable.profile_photo)
             }
         }
+
     }
 
 
