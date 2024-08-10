@@ -170,7 +170,7 @@ class DataService : Service() {
         NotificationManagerCompat.from(this).notify(notificationId, notification)
     }
     private fun fetchDataFromFirebase() {
-        database.child("hiveboxes/beehive").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("hiveboxes/beehive").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val dataMap = snapshot.value as? Map<*, *>
                 dataMap?.let {

@@ -19,6 +19,8 @@ import com.umer.beehiveclient.Util
 import com.umer.beehiveclient.adapters.ViewPagerAdapter
 import com.umer.beehiveclient.databinding.ActivityMainBinding
 import com.umer.beehiveclient.service.DataService
+import com.umer.databasehelper.HiveRepository
+import com.umer.databasehelper.database.HiveDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".fragments.SettingFragment">
@@ -273,8 +274,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.google.android.material.button.MaterialButton
+                    app:rippleColor="@color/gray"
                     android:id="@+id/backupNowButton"
                     android:layout_gravity="end"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -285,7 +289,7 @@
                 <ProgressBar
                     android:padding="10dp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/backupNowButton"
+                    android:layout_toLeftOf="@+id/backupNowButton"
                     android:id="@+id/backupNowProgress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -293,7 +297,7 @@
                     android:indeterminateTint="@color/primaryColor"
                     android:progress="10"
                     android:progressTint="@color/primaryColor"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
             </RelativeLayout>
         </LinearLayout>

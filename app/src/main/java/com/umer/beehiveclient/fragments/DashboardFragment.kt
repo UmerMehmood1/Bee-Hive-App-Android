@@ -8,21 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.umer.beehiveclient.adapters.HiveAdapter
+import com.umer.beehiveclient.bottomSheets.AddHiveBottomSheet
 import com.umer.beehiveclient.databinding.FragmentDashboardBinding
-import com.umer.beehiveclient.models.HiveModel
+import com.umer.databasehelper.HiveRepository
+import com.umer.databasehelper.database.HiveDatabase
+import com.umer.databasehelper.entities.Hive
 import java.util.Locale
 
 class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var adapter: HiveAdapter
-    private var hiveList = listOf(
-        HiveModel("Hive #1", 100, "25°C", "50%", "25dB"),
-        HiveModel("Hive #2", 150, "30°C", "60%", "30dB"),
-        HiveModel("Hive #3", 200, "35°C", "70%", "35dB")
-    )
-    private var filteredHiveList = hiveList.toMutableList()
+    private lateinit var hiveRepository: HiveRepository
+    private lateinit var hiveDatabase: HiveDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +35,18 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        hiveDatabase = HiveDatabase.getDatabase(requireContext())
+        hiveRepository = HiveRepository(hiveDatabase.hiveDao())
 
         binding.hiveRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = HiveAdapter(filteredHiveList)
+        adapter = HiveAdapter()
         binding.hiveRecyclerView.adapter = adapter
+
+        // Observe LiveData from the repository
+        hiveRepository.getAllHives().observe(viewLifecycleOwner, Observer { hives ->
+            adapter.submitList(hives)
+            filterHives(binding.searchView.text.toString())
+        })
 
         binding.searchView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -52,20 +61,24 @@ class DashboardFragment : Fragment() {
                 // Do nothing
             }
         })
+
+        binding.addNewHiveButton.setOnClickListener {
+            AddHiveBottomSheet(requireContext())
+        }
     }
 
     private fun filterHives(query: String?) {
         val lowerCaseQuery = query?.lowercase(Locale.getDefault()) ?: ""
-        filteredHiveList = if (lowerCaseQuery.isEmpty()) {
-            hiveList.toMutableList()
+        val filteredHives = if (lowerCaseQuery.isEmpty()) {
+            adapter.currentList
         } else {
-            hiveList.filter {
-                it.name.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
-                        it.temperature.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
-                        it.humidity.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
-                        it.sound.lowercase(Locale.getDefault()).contains(lowerCaseQuery)
-            }.toMutableList()
+            adapter.currentList.filter {
+                it.beeHiveName.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                        it.temperatureValue.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                        it.weightValue.lowercase(Locale.getDefault()).contains(lowerCaseQuery) ||
+                        it.soundValue.lowercase(Locale.getDefault()).contains(lowerCaseQuery)
+            }
         }
-        adapter.updateList(filteredHiveList)
+        adapter.submitList(filteredHives)
     }
 }

@@ -54,6 +54,7 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.lang.Error
 
 class SettingFragment : Fragment() {
     private lateinit var binding: FragmentSettingBinding
@@ -70,6 +71,10 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFragmentViews()
+        setListeners()
+    }
+    private fun setFragmentViews(){
         when {
             Util.getBackupFrequency(requireContext()) == 0 -> {
                 binding.backupFrequencyText.text = "Hourly"
@@ -83,29 +88,25 @@ class SettingFragment : Fragment() {
                 binding.backupFrequencyText.text = "Weekly"
             }
         }
+        binding.backupNowProgress.visibility = GONE
         binding.backupSwitch.isChecked = Util.getIsBackedUp(requireContext())
-        binding.backupSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (!isChecked){
-                binding.backupNowProgress.visibility = GONE
-                binding.backupNowButton.visibility = GONE
-            }
-            else{
-                binding.backupNowButton.visibility = VISIBLE
-            }
-
-        }
         if (Util.getIsBackedUp(requireContext())) {
-            binding.backupNowProgress.visibility = VISIBLE
+            binding.backupNowButton.visibility = VISIBLE
         }
         else{
+            binding.backupNowButton.visibility = GONE
             binding.backupNowProgress.visibility = GONE
         }
         networkChangeReceiver = NetworkChangeReceiver(object : OnInternetStateChanged {
             override fun onConnected() {
+                binding.backupNowButton.isEnabled = true
+                binding.backupSwitch.isEnabled = true
                 isInternetConnected = true
             }
 
             override fun onDisconnected() {
+                binding.backupNowButton.isEnabled = false
+                binding.backupSwitch.isEnabled = false
                 isInternetConnected = false
                 Snackbar.make(
                     binding.root,
@@ -135,17 +136,15 @@ class SettingFragment : Fragment() {
                 }
             )
         }
-        setListeners()
     }
-
     private fun setListeners() {
         binding.frequencyButton.setOnClickListener {
             BackupOptionsSheet(requireContext(), object : BackupOptionListener {
                 override fun onOptionSelected(option: Int) {
                     val selectedItem = when (option) {
-                        BackupOptionsSheet.HOURLY -> "Hourly"
-                        BackupOptionsSheet.DAILY -> "Daily"
-                        BackupOptionsSheet.WEEKLY -> "Weekly"
+                        HOURLY -> "Hourly"
+                        DAILY -> "Daily"
+                        WEEKLY -> "Weekly"
                         else -> "Unknown"
                     }
                     Util.saveBackupFrequency(requireContext(), option)
@@ -157,28 +156,36 @@ class SettingFragment : Fragment() {
             context?.let { context ->
                 if (binding.backupSwitch.isChecked) {
                     // Handle the case when the switch is turned on
-                    Util.saveIsBackedUp(context, true)
-                    binding.backupSwitch.isChecked = false
-                } else {
-                    // Handle the case when the switch is turned off
-                    if (ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        uploadFileToDrive(false)
-                    } else {
+                    if (ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        uploadFileToDrive(false, onGoogleConnected = {
+                            binding.backupNowButton.visibility = VISIBLE
+                        }, onError =  {
+                        })
+                    }
+                    else {
+                        binding.backupSwitch.isChecked = false
                         requestPermissions(
                             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                             101
                         )
                     }
+                    Util.saveIsBackedUp(context, true)
+                } else {
+                    binding.backupNowButton.visibility = GONE
+                    // Handle the case when the switch is turned off
+                    Util.saveIsBackedUp(context, false)
                 }
             }
         }
         binding.backupNowButton.setOnClickListener {
             if (isInternetConnected) {
-                uploadFileToDrive(true)
+                binding.backupNowButton.isEnabled = false
+                uploadFileToDrive(true, onGoogleConnected = {
+                    binding.backupNowButton.visibility = VISIBLE
+                    binding.backupNowButton.isEnabled = true
+                }, onError =  {
+                    binding.backupNowButton.isEnabled = true
+                })
             } else {
                 context?.let {
                     Util.showToast(it, "Please connect to the internet")
@@ -192,7 +199,10 @@ class SettingFragment : Fragment() {
         if (requestCode == 101) {
             context?.let {
                 if (it.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    uploadFileToDrive(false)
+                    uploadFileToDrive(false, onGoogleConnected = {
+                        binding.backupNowButton.visibility = VISIBLE
+                    }, onError =  {
+                    })
                 } else {
                     Util.showToast(it, "Storage permission not granted")
                 }
@@ -223,7 +233,10 @@ class SettingFragment : Fragment() {
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 // now, you have permission go ahead
-                uploadFileToDrive(false)
+                uploadFileToDrive(false, onGoogleConnected = {
+                    binding.backupNowButton.visibility = VISIBLE
+                }, onError =  {
+                })
             } else {
                 activity?.let { activity ->
                     if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -248,22 +261,28 @@ class SettingFragment : Fragment() {
         return
     }
 
-    private fun uploadFileToDrive(isFromBackUpButton: Boolean) {
+    private fun uploadFileToDrive(isFromBackUpButton: Boolean, onGoogleConnected: () -> Unit, onError: () -> Unit={}) {
         context?.let {
             val fileName = it.dataDir.path + "/sensor_data.json"
             val jsonFile = java.io.File(fileName)
+            if (!isFromBackUpButton){
+                Util.showToast(it, "Please wait while configuring backup settings...")
+            }
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-
-                    val handler = Handler(Looper.getMainLooper())
-                    val fetchRunnable = object : java.lang.Runnable {
-                        override fun run() {
+                    if (isFromBackUpButton){
+                        withContext(Dispatchers.Main) {
                             binding.backupNowProgress.visibility = VISIBLE
-                            binding.backupNowProgress.progress += binding.backupNowProgress.progress
-                            handler.postDelayed(this, 1000)
                         }
+                        val handler = Handler(Looper.getMainLooper())
+                        val fetchRunnable = object : java.lang.Runnable {
+                            override fun run() {
+                                binding.backupNowProgress.progress += binding.backupNowProgress.progress
+                                handler.postDelayed(this, 1000)
+                            }
+                        }
+                        handler.post(fetchRunnable)
                     }
-                    handler.post(fetchRunnable)
                     val account = GoogleSignIn.getLastSignedInAccount(it)
                     val credential =
                         GoogleAccountCredential.usingOAuth2(it, listOf(DriveScopes.DRIVE_FILE))
@@ -293,9 +312,11 @@ class SettingFragment : Fragment() {
                         if (isFromBackUpButton) {
                             binding.backupNowProgress.progress = 100
                             binding.backupNowProgress.visibility = GONE
-                            Util.showToast(it, "Backed Up")
+                            Util.showToast(it, "Backup Successfully")
+                            onGoogleConnected()
                         } else {
                             Util.showToast(it, "Google Drive Connected")
+                            onGoogleConnected()
                             binding.backupSwitch.isChecked = true
                         }
                     }
@@ -306,9 +327,11 @@ class SettingFragment : Fragment() {
                             binding.backupNowProgress.visibility = GONE
                             Util.showToast(it, "Upload failed...")
                         } else {
-                            Util.showToast(it, "Google Drive not connected")
+                            e.printStackTrace()
+                            Util.showToast(it, "Google Drive not connected. Please try restarting the app.")
                             binding.backupSwitch.isChecked = false
                         }
+                        onError()
                     }
                 }
             }
