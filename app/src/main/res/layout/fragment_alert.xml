@@ -23,25 +23,12 @@
         android:layout_height="wrap_content"
         android:text="Critical Conditions" />
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_above="@id/acknowledgeButton"
         android:layout_below="@+id/criticalConditionText"
         android:id="@+id/criticalConditionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_marginVertical="10dp"
-        android:layout_below="@id/criticalConditionRecyclerView"
-        android:id="@+id/significantChanges"
-        android:textSize="18sp"
-        android:theme="@style/Heading1TextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Significant Changes" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_above="@+id/acknowledgeButton"
-        android:layout_below="@+id/significantChanges"
-        android:id="@+id/significantChangesRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
     <com.google.android.material.button.MaterialButton
         android:padding="10dp"
         android:id="@+id/acknowledgeButton"

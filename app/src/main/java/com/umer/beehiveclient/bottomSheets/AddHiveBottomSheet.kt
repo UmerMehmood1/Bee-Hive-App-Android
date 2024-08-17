@@ -38,7 +38,7 @@ class AddHiveBottomSheet(context: Context): BottomSheetDialog(context) {
         val databaseOffline = HiveDatabase.getDatabase(context)
         val hiveRepository = HiveRepository(databaseOffline.hiveDao())
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("hiveboxes/$hiveCode")
+        val databaseReference = FirebaseDatabase.getInstance().reference
 
         // Check if the beehive exists
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {

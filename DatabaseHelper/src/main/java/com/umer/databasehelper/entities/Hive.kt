@@ -2,26 +2,14 @@ package com.umer.databasehelper.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.ColumnInfo
 
-@Entity(tableName = "hive_table")
+@Entity(tableName = "hive")
 data class Hive(
-    @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "beeHiveName")
-    val beeHiveName: String,
-
-    @ColumnInfo(name = "beeCountValue")
-    val beeCountValue: String,
-
-    @ColumnInfo(name = "lightValue")
-    val lightValue: String,
-
-    @ColumnInfo(name = "soundValue")
-    val soundValue: String,
-
-    @ColumnInfo(name = "temperatureValue")
+    @PrimaryKey val beeHiveName: String,
+    val beeCountValue: Int,
     val temperatureValue: String,
-
-    @ColumnInfo(name = "weightValue")
-    val weightValue: String
+    val humidityValue: String,
+    val lightLevelValue: String,
+    val weightValue: String,
+    val soundValue: String
 )

@@ -26,14 +26,14 @@ class AlertFragment : Fragment() {
         val alertList = listOf(
             Alert("Temperature is too high", "Hive #1"),
             Alert("Humidity is too high", "Hive #2"),
-            Alert("Sound is too low", "Hive #3")
+            Alert("Sound is too low", "Hive #3"),
+            Alert("Light level is too low", "Hive #4"),
+            Alert("Weight is too high", "Hive #5"),
+            Alert("Temperature is too high", "Hive #6"),
         )
         binding.criticalConditionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         val adapter = AlertAdapter(alertList)
         binding.criticalConditionRecyclerView.adapter = adapter
-        binding.significantChangesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val significantChangesAdapter = AlertAdapter(alertList)
-        binding.significantChangesRecyclerView.adapter = significantChangesAdapter
     }
     private fun setListeners(){
 

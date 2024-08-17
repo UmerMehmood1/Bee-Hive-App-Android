@@ -33,49 +33,52 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
             binding.hiveName.text = hive.beeHiveName
             binding.beesAmount.text = "${hive.beeCountValue} bees"
             binding.temperatureAmount.text = hive.temperatureValue
-            binding.humidityAmount.text = hive.lightValue
-            binding.soundAmount.text = hive.soundValue
-            // Assuming you have a drawable resource ID in HiveModel for the image
+            binding.humidityAmount.text = hive.humidityValue
+            binding.lightLevelAmount.text = hive.lightLevelValue
+            binding.weightAmount.text = "${hive.weightValue} kg"
+            binding.soundAmount.text = "${hive.soundValue} dB"
             binding.hiveImage.setImageResource(R.drawable.bees_1)
-            checkAndUpdateBeehive(binding.root.context, hive.beeHiveName,position)
+            checkAndUpdateBeehive(binding, binding.root.context, hive.beeHiveName, position)
             binding.root.setOnClickListener {
-                // Handle item click event here
                 val context = binding.root.context
                 val intent = Intent(context, HiveDetailsActivity::class.java)
-                // You might want to pass data to the activity if needed
                 context.startActivity(intent)
             }
-
         }
     }
 
-    private fun checkAndUpdateBeehive(context: Context, hiveCode: String, position: Int) {
+
+
+    private fun checkAndUpdateBeehive(binding: HiveItemBinding, context: Context, hiveCode: String, position: Int) {
         val databaseOffline = HiveDatabase.getDatabase(context)
         val hiveRepository = HiveRepository(databaseOffline.hiveDao())
+        if (hiveCode == "beehive"){
+            val databaseReference = FirebaseDatabase.getInstance().reference
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        // The beehive exists, get live data
+                        addLiveDataListener(binding,context, databaseReference, hiveRepository, hiveCode, position)
+                    } else {
+                        // The beehive does not exist
+                        Util.showToast(context, "Beehive does not exist. Contact admin for access.")
+                    }
+                }
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("hiveboxes/$hiveCode")
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle any errors
+                    Log.e("DatabaseError", "Failed to check existence", error.toException())
+                    Util.showToast(context, "Failed to check beehive existence")
+                }
+            })
+
+        }
 
         // Check if the beehive exists
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    // The beehive exists, get live data
-                    addLiveDataListener(context, databaseReference, hiveRepository, hiveCode, position)
-                } else {
-                    // The beehive does not exist
-                    Util.showToast(context, "Beehive does not exist. Contact admin for access.")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle any errors
-                Log.e("DatabaseError", "Failed to check existence", error.toException())
-                Util.showToast(context, "Failed to check beehive existence")
-            }
-        })
     }
 
     private fun addLiveDataListener(
+        binding: HiveItemBinding,
         context: Context,
         databaseReference: DatabaseReference,
         hiveRepository: HiveRepository,
@@ -89,11 +92,16 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
                     // Convert Beehive data to Hive and update the database
                     CoroutineScope(Dispatchers.IO).launch {
                         hiveRepository.addOrUpdateHive(beehiveData.toHive(hiveCode))
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.hiveName.text = beehiveData.toHive(hiveCode).beeHiveName
+                            binding.beesAmount.text = "${beehiveData.toHive(hiveCode).beeCountValue} bees"
+                            binding.temperatureAmount.text = beehiveData.toHive(hiveCode).temperatureValue
+                            binding.humidityAmount.text = beehiveData.toHive(hiveCode).humidityValue
+                            binding.lightLevelAmount.text = beehiveData.toHive(hiveCode).lightLevelValue
+                            binding.weightAmount.text = "${beehiveData.toHive(hiveCode).weightValue} kg"
+                            binding.soundAmount.text = "${beehiveData.toHive(hiveCode).soundValue} dB"
+                        }
                     }
-                    CoroutineScope(Dispatchers.Main).launch {
-                        notifyItemChanged(position)
-                    }
-
                 } else {
                     Log.w("DatabaseWarning", "Beehive data is null")
                 }

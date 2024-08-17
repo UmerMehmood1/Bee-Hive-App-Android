@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "612169633560",
-    "project_id": "beehive-7a398",
-    "storage_bucket": "beehive-7a398.appspot.com"
+    "project_number": "488995732221",
+    "firebase_url": "https://bee-final-17f8b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "bee-final-17f8b",
+    "storage_bucket": "bee-final-17f8b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:612169633560:android:b129ff9e60f5872e01586d",
+        "mobilesdk_app_id": "1:488995732221:android:02f2db43e8bf496fcc1c94",
         "android_client_info": {
           "package_name": "com.umer.beehiveclient"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBxqGe0zBiaWWEzCa7miNVMHigtDcfO3Cg"
+          "current_key": "AIzaSyAIeleHfAB8Su0tSGoSZRTIF-JAqB1qKps"
         }
       ],
       "services": {

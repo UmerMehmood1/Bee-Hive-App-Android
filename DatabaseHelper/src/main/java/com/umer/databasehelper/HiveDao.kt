@@ -13,11 +13,10 @@ interface HiveDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(hive: Hive)
 
-    @Query("SELECT * FROM hive_table WHERE beeHiveName = :beeHiveName")
+    @Query("SELECT * FROM hive WHERE beeHiveName = :beeHiveName")
     @RewriteQueriesToDropUnusedColumns
     suspend fun getHiveByName(beeHiveName: String): Hive?
-    @Query("SELECT * FROM hive_table")
 
-    @RewriteQueriesToDropUnusedColumns
+    @Query("SELECT * FROM hive")
     fun getAllHives(): LiveData<List<Hive>>
 }

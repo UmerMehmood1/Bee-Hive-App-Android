@@ -3,6 +3,7 @@ package com.umer.beehiveclient.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -43,10 +44,13 @@ class DashboardFragment : Fragment() {
         binding.hiveRecyclerView.adapter = adapter
 
         // Observe LiveData from the repository
-        hiveRepository.getAllHives().observe(viewLifecycleOwner, Observer { hives ->
-            adapter.submitList(hives)
-            filterHives(binding.searchView.text.toString())
-        })
+        hiveRepository.getAllHives().observe(viewLifecycleOwner) { hives ->
+            if (adapter.currentList != hives){
+                Log.d("HiveRepository", "Hive data changed: $hives")
+                adapter.submitList(hives)
+                filterHives(binding.searchView.text.toString())
+            }
+        }
 
         binding.searchView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
