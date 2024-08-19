@@ -15,28 +15,41 @@ Welcome to the Beehive Monitoring App, an Android application designed to help b
 ### Login Screen
 The login screen allows users to sign in with their Google account to access the app.
 
-![Login Screen](ScreenShots/Login.png)
+<p align="center">
+  <img src="ScreenShots/Login.png" alt="Login Screen" height="400">
+</p>
 
 ### Dashboard
 The dashboard provides a quick overview of the current status of all monitored hives, including key metrics such as temperature, humidity, and sound levels.
 
-![Dashboard](ScreenShots/Dashboard.png)
+<p align="center">
+  <img src="ScreenShots/Dashboard.png" alt="Dashboard" height="400">
+</p>
 
 ### Hive Details
 The Hive Details screen shows comprehensive information for a selected hive, including historical data, charts, and current sensor readings.
 
-![Hive Details](ScreenShots/Hive_Details.png)
-![Hive Details Part 2](ScreenShots/Hive_Details_More.png)
+<p align="center">
+  <img src="ScreenShots/Hive_Details.png" alt="Hive Details" height="400">
+</p>
+
+<p align="center">
+  <img src="ScreenShots/Hive_Details_More.png" alt="Hive Details Part 2" height="400">
+</p>
 
 ### Alerts
 The Alerts screen displays any notifications triggered by sensor readings that exceed predefined thresholds, allowing users to address issues promptly.
 
-![Alerts](ScreenShots/Alert.png)
+<p align="center">
+  <img src="ScreenShots/Alert.png" alt="Alerts" height="400">
+</p>
 
 ### Settings
 The Settings screen lets users configure their preferences, including alert thresholds, notification settings, and profile details.
 
-![Settings](ScreenShots/Setting.png)
+<p align="center">
+  <img src="ScreenShots/Setting.png" alt="Settings" height="400">
+</p>
 
 ## Installation
 
