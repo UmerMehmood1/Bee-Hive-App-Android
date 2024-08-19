@@ -31,9 +31,6 @@ The Hive Details screen shows comprehensive information for a selected hive, inc
 
 <p align="center">
   <img src="ScreenShots/Hive_Details.png" alt="Hive Details" height="400">
-</p>
-
-<p align="center">
   <img src="ScreenShots/Hive_Details_More.png" alt="Hive Details Part 2" height="400">
 </p>
 
