@@ -18,24 +18,26 @@ import com.umer.beehiveclient.R
 import com.umer.beehiveclient.Util
 import com.umer.beehiveclient.adapters.ViewPagerAdapter
 import com.umer.beehiveclient.databinding.ActivityMainBinding
+import com.umer.beehiveclient.listeners.SettingFragmentListener
 import com.umer.beehiveclient.service.DataService
 import com.umer.databasehelper.HiveRepository
 import com.umer.databasehelper.database.HiveDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var dataService: DataService? = null
-    private var isBound = false
+    companion object{
+        var dataService: DataService? = null
+        var isBound = false
+        val connection = object : ServiceConnection {
+            override fun onServiceConnected(className: ComponentName, service: IBinder) {
+                val binder = service as DataService.LocalBinder
+                dataService = binder.getService()
+                isBound = true
+            }
 
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as DataService.LocalBinder
-            dataService = binder.getService()
-            isBound = true
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            isBound = false
+            override fun onServiceDisconnected(arg0: ComponentName) {
+                isBound = false
+            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,21 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        binding.viewPager.adapter = ViewPagerAdapter(this)
+        binding.viewPager.adapter = ViewPagerAdapter(this, object : SettingFragmentListener{
+            override fun onStopServiceClicked() {
+                unbindService(connection)
+                isBound = false
+                stopService(Intent(this@MainActivity, DataService::class.java))
+            }
+
+            override fun onStartServiceClicked() {
+                Intent(this@MainActivity, DataService::class.java).also { intent ->
+                    bindService(intent, connection, Context.BIND_AUTO_CREATE)
+                    startService(intent)
+                }
+            }
+
+        })
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.orientation = androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
         binding.bottomNavigation.setOnItemSelectedListener { item ->
@@ -66,10 +82,10 @@ class MainActivity : AppCompatActivity() {
                     binding.viewPager.setCurrentItem(2, true)
                     true
                 }
-                R.id.profile -> {
-                    binding.viewPager.setCurrentItem(3, true)
-                    true
-                }
+//                R.id.profile -> {
+//                    binding.viewPager.setCurrentItem(3, true)
+//                    true
+//                }
 
                 else ->{
                     Toast.makeText(this@MainActivity, "In Development Process!!!", Toast.LENGTH_SHORT).show()
@@ -111,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         // Unbind from the service
         if (isBound) {
             unbindService(connection)
+            if (!Util.getIsBackedUp(this)){
+                stopService(Intent(this, DataService::class.java))
+            }
             isBound = false
         }
     }

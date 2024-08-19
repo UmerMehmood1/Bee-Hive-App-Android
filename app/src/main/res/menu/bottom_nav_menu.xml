@@ -3,7 +3,7 @@
     <item android:id="@+id/home" android:title="Dashboard" android:icon="@drawable/round_home_24" />
     <item android:id="@+id/alerts" android:title="Alert" android:icon="@drawable/alertsvg" />
     <item android:id="@+id/settings" android:title="Settings" android:icon="@drawable/round_settings_24" />
-    <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/profile" />
+<!--    <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/profile" />-->
 
 
 </menu>

@@ -29,7 +29,7 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
 
     inner class HiveViewHolder(private val binding: HiveItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(hive: Hive, position: Int) {
+        fun bind(hive: Hive) {
             binding.hiveName.text = hive.beeHiveName
             binding.beesAmount.text = "${hive.beeCountValue} bees"
             binding.temperatureAmount.text = hive.temperatureValue
@@ -38,7 +38,7 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
             binding.weightAmount.text = "${hive.weightValue} kg"
             binding.soundAmount.text = "${hive.soundValue} dB"
             binding.hiveImage.setImageResource(R.drawable.bees_1)
-            checkAndUpdateBeehive(binding, binding.root.context, hive.beeHiveName, position)
+            checkAndUpdateBeehive(binding, binding.root.context, hive.beeHiveName)
             binding.root.setOnClickListener {
                 val context = binding.root.context
                 val intent = Intent(context, HiveDetailsActivity::class.java)
@@ -49,7 +49,7 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
 
 
 
-    private fun checkAndUpdateBeehive(binding: HiveItemBinding, context: Context, hiveCode: String, position: Int) {
+    private fun checkAndUpdateBeehive(binding: HiveItemBinding, context: Context, hiveCode: String) {
         val databaseOffline = HiveDatabase.getDatabase(context)
         val hiveRepository = HiveRepository(databaseOffline.hiveDao())
         if (hiveCode == "beehive"){
@@ -58,7 +58,7 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         // The beehive exists, get live data
-                        addLiveDataListener(binding,context, databaseReference, hiveRepository, hiveCode, position)
+                        addLiveDataListener(binding,context, databaseReference, hiveRepository, hiveCode)
                     } else {
                         // The beehive does not exist
                         Util.showToast(context, "Beehive does not exist. Contact admin for access.")
@@ -83,7 +83,6 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
         databaseReference: DatabaseReference,
         hiveRepository: HiveRepository,
         hiveCode: String,
-        position: Int
     ) {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -91,15 +90,16 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
                 if (beehiveData != null) {
                     // Convert Beehive data to Hive and update the database
                     CoroutineScope(Dispatchers.IO).launch {
-                        hiveRepository.addOrUpdateHive(beehiveData.toHive(hiveCode))
+                        val hive = beehiveData.toHive(hiveCode)
+                        hiveRepository.addOrUpdateHive(hive)
                         CoroutineScope(Dispatchers.Main).launch {
-                            binding.hiveName.text = beehiveData.toHive(hiveCode).beeHiveName
-                            binding.beesAmount.text = "${beehiveData.toHive(hiveCode).beeCountValue} bees"
-                            binding.temperatureAmount.text = beehiveData.toHive(hiveCode).temperatureValue
-                            binding.humidityAmount.text = beehiveData.toHive(hiveCode).humidityValue
-                            binding.lightLevelAmount.text = beehiveData.toHive(hiveCode).lightLevelValue
-                            binding.weightAmount.text = "${beehiveData.toHive(hiveCode).weightValue} kg"
-                            binding.soundAmount.text = "${beehiveData.toHive(hiveCode).soundValue} dB"
+                            binding.hiveName.text = hive.beeHiveName
+                            binding.beesAmount.text = "${hive.beeCountValue} bees"
+                            binding.temperatureAmount.text = hive.temperatureValue
+                            binding.humidityAmount.text = hive.humidityValue
+                            binding.lightLevelAmount.text = hive.lightLevelValue
+                            binding.weightAmount.text = "${hive.weightValue} kg"
+                            binding.soundAmount.text = "${hive.soundValue} dB"
                         }
                     }
                 } else {
@@ -122,7 +122,7 @@ class HiveAdapter : ListAdapter<Hive, HiveAdapter.HiveViewHolder>(HiveDiffCallba
 
     override fun onBindViewHolder(holder: HiveViewHolder, position: Int) {
         val hive = getItem(position)
-        holder.bind(hive, position)
+        holder.bind(hive)
     }
 
 

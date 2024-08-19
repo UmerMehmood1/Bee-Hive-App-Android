@@ -2,6 +2,7 @@ package com.umer.beehiveclient.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -37,6 +38,8 @@ import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.umer.beehiveclient.R
 import com.umer.beehiveclient.Util
+import com.umer.beehiveclient.activities.LoginActivity
+import com.umer.beehiveclient.activities.MainActivity
 import com.umer.beehiveclient.bottomSheets.BackupOptionsSheet
 import com.umer.beehiveclient.bottomSheets.BackupOptionsSheet.Companion.DAILY
 import com.umer.beehiveclient.bottomSheets.BackupOptionsSheet.Companion.HOURLY
@@ -47,7 +50,9 @@ import com.umer.beehiveclient.databinding.FragmentSettingBinding
 import com.umer.beehiveclient.listeners.BackupOptionListener
 import com.umer.beehiveclient.listeners.OnInternetStateChanged
 import com.umer.beehiveclient.listeners.PermissionListener
+import com.umer.beehiveclient.listeners.SettingFragmentListener
 import com.umer.beehiveclient.recievers.NetworkChangeReceiver
+import com.umer.beehiveclient.service.DataService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
@@ -61,12 +66,16 @@ class SettingFragment : Fragment() {
     private var permissionBottomSheet: PermissionBottomSheet? = null
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private var isInternetConnected: Boolean = false
+    private var settingFragmentListener: SettingFragmentListener? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         return binding.root
+    }
+    fun setListener(listener: SettingFragmentListener) {
+        settingFragmentListener = listener
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -159,11 +168,13 @@ class SettingFragment : Fragment() {
                     if (ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         uploadFileToDrive(false, onGoogleConnected = {
                             binding.backupNowButton.visibility = VISIBLE
+                            settingFragmentListener?.onStartServiceClicked()
                         }, onError =  {
                         })
                     }
                     else {
                         binding.backupSwitch.isChecked = false
+
                         requestPermissions(
                             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                             101
@@ -172,6 +183,8 @@ class SettingFragment : Fragment() {
                     Util.saveIsBackedUp(context, true)
                 } else {
                     binding.backupNowButton.visibility = GONE
+                    settingFragmentListener?.onStopServiceClicked()
+
                     // Handle the case when the switch is turned off
                     Util.saveIsBackedUp(context, false)
                 }
@@ -191,6 +204,14 @@ class SettingFragment : Fragment() {
                     Util.showToast(it, "Please connect to the internet")
                 }
             }
+        }
+        binding.logoutButton.setOnClickListener {
+            Util.clearUser(requireContext())
+            activity?.finish()
+            context?.let {
+                Util.showToast(it, "Logged out successfully")
+            }
+            startActivity(Intent(activity, LoginActivity::class.java))
         }
     }
 
@@ -261,7 +282,7 @@ class SettingFragment : Fragment() {
         return
     }
 
-    private fun uploadFileToDrive(isFromBackUpButton: Boolean, onGoogleConnected: () -> Unit, onError: () -> Unit={}) {
+    private fun uploadFileToDrive(isFromBackUpButton: Boolean, onGoogleConnected: () -> Unit, onError: () -> Unit) {
         context?.let {
             val fileName = it.dataDir.path + "/sensor_data.json"
             val jsonFile = java.io.File(fileName)
@@ -303,7 +324,7 @@ class SettingFragment : Fragment() {
                         driveService.files().update(fileId, null, mediaContent).execute()
                     } else {
                         val fileMetadata = File()
-                        fileMetadata.name = fileName
+                        fileMetadata.name = jsonFile.name
                         val mediaContent = FileContent("application/json", jsonFile)
                         driveService.files().create(fileMetadata, mediaContent).execute()
                     }

@@ -300,6 +300,26 @@
                     android:visibility="visible"
                     />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/logoutButton"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Logout"
+                    android:theme="@style/Heading2TextStyle"
+                    android:textColor="@color/textColorH2"
+                    />
+                <ImageView
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/rounded_logout_24"/>
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

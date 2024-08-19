@@ -26,6 +26,12 @@ object Util {
             apply()
         }
     }
+    fun clearUser(context: Context){
+        context.getSharedPreferences("user",Context.MODE_PRIVATE).edit().apply {
+            clear()
+            apply()
+        }
+    }
     fun getUser(context: Context): User? {
         val sharedPreferences = context.getSharedPreferences("user",Context.MODE_PRIVATE)
         val userName = sharedPreferences.getString("name","")
