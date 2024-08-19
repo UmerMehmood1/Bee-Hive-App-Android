@@ -79,4 +79,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Contact
 
-For any inquiries or feedback, please contact us at support@beehivemonitoring.com.
+For any inquiries or feedback, please contact us at beehive.user2762@gmail.com.
