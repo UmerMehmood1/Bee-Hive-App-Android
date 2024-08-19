@@ -15,27 +15,28 @@ Welcome to the Beehive Monitoring App, an Android application designed to help b
 ### Login Screen
 The login screen allows users to sign in with their Google account to access the app.
 
-![Login Screen](screenshots/login_screen.png)
+![Login Screen](ScreenShots/Login.png)
 
 ### Dashboard
 The dashboard provides a quick overview of the current status of all monitored hives, including key metrics such as temperature, humidity, and sound levels.
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](ScreenShots/Dashboard.png)
 
 ### Hive Details
 The Hive Details screen shows comprehensive information for a selected hive, including historical data, charts, and current sensor readings.
 
-![Hive Details](screenshots/hive_details.png)
+![Hive Details](ScreenShots/Hive_Details.png)
+![Hive Details Part 2](ScreenShots/Hive_Details_More.png)
 
 ### Alerts
 The Alerts screen displays any notifications triggered by sensor readings that exceed predefined thresholds, allowing users to address issues promptly.
 
-![Alerts](screenshots/alerts.png)
+![Alerts](ScreenShots/Alert.png)
 
 ### Settings
 The Settings screen lets users configure their preferences, including alert thresholds, notification settings, and profile details.
 
-![Settings](screenshots/settings.png)
+![Settings](ScreenShots/Setting.png)
 
 ## Installation
 
@@ -43,7 +44,7 @@ To run the Beehive Monitoring App on your Android device:
 
 1. Clone this repository to your local machine.
     ```
-    git clone https://github.com/UmerMehmood1/Bee_Hive_Client/.git
+    git clone https://github.com/UmerMehmood1/Bee_Hive_Client.git
     ```
 2. Open the project in Android Studio.
 3. Sync the project with Gradle files.
