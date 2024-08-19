@@ -19,6 +19,8 @@ import com.umer.beehiveclient.models.DataPoint
 import com.umer.beehiveclient.models.DataWrapper
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 class HiveDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHiveDetailsBinding
@@ -189,11 +191,11 @@ class HiveDetailsActivity : AppCompatActivity() {
                 val timestamp = dateFormat.format(calendar.time)
 
                 // Create smooth temperature variation
-                val tempVariation = Math.sin(hour / 24.0 * Math.PI * 2) * temperatureVariation
+                val tempVariation = sin(hour / 24.0 * Math.PI * 2) * temperatureVariation
                 val temperature = baseTemperature + tempVariation
 
                 // Create smooth humidity variation
-                val humidityVariationFactor = Math.cos(hour / 24.0 * Math.PI * 2) * humidityVariation
+                val humidityVariationFactor = cos(hour / 24.0 * Math.PI * 2) * humidityVariation
                 val humidity = (baseHumidity + humidityVariationFactor).toInt().coerceIn(40, 100)
 
                 // Add the data point to the list
