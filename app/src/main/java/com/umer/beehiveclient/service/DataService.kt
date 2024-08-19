@@ -259,7 +259,7 @@ class DataService : Service() {
                     driveService.files().update(fileId, null, mediaContent).execute()
                 } else {
                     val fileMetadata = File()
-                    fileMetadata.name = fileName
+                    fileMetadata.name = jsonFile.name
                     val mediaContent = FileContent("application/json", jsonFile)
                     driveService.files().create(fileMetadata, mediaContent).execute()
                 }
