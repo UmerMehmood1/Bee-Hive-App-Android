@@ -43,7 +43,7 @@ To run the Beehive Monitoring App on your Android device:
 
 1. Clone this repository to your local machine.
     ```
-    git clone https://github.com/yourusername/beehive-monitoring.git
+    git clone https://github.com/UmerMehmood1/Bee_Hive_Client/.git
     ```
 2. Open the project in Android Studio.
 3. Sync the project with Gradle files.
